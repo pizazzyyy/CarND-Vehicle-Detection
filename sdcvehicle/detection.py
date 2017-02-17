@@ -25,7 +25,7 @@ class VehicleDetector(object):
         # parameters for layer pyramid
         self.scale = 1.2
         # heatmap threshold
-        self.heatmap_thr = 2.5
+        self.heatmap_thr = 5
         # for video detection
         self.last_heatmap = None
 
@@ -158,16 +158,26 @@ class VehicleDetector(object):
     def detect_in_video(self, video):
         """Detect vehicles in `moviepy.editor.VideoFileClip`
         """
+        self.furthest_heatmap = None
+        self.last_last_heatmap = None
         self.last_heatmap = None
         def process_frame(frame):
-            if self.last_heatmap is None:
+            if self.furthest_heatmap is None:
+                self.furthest_heatmap = self.get_heatmap(frame)
+                detection_img = self.draw_merged_boxes(frame, self.furthest_heatmap)            
+            elif self.last_last_heatmap is None:
+                self.last_last_heatmap = self.get_heatmap(frame)
+                detection_img = self.draw_merged_boxes(frame, self.last_last_heatmap)
+            elif self.last_heatmap is None:
                 self.last_heatmap = self.get_heatmap(frame)
                 detection_img = self.draw_merged_boxes(frame, self.last_heatmap)
             else:
                 heatmap = self.get_heatmap(frame)
-                combined_heatmap = heatmap * 0.8 + self.last_heatmap * 0.2
+                combined_heatmap = heatmap * 0.5 + self.last_heatmap * 0.2 + self.last_last_heatmap * 0.2 + self.furthest_heatmap * 0.1
                 detection_img = self.draw_merged_boxes(frame, combined_heatmap)
-                self.last_heatmap = combined_heatmap
+                self.furthest_heatmap = self.last_last_heatmap
+                self.last_last_heatmap = self.last_heatmap
+                self.last_heatmap = heatmap
             return detection_img
         processed_video = video.fl_image(process_frame)
         return processed_video

@@ -156,12 +156,17 @@ def enhance_negative_data():
         else:
             whole_image = whole_image[R//2:, :C//2, :]
         whole_images.append(whole_image)
+    
+    for f in glob("./nonvehicle/*.png"):
+        # whole_image = io.imread("../test_images/test2.jpg")
+        whole_image = io.imread(f)
+        whole_images.append(whole_image)
 
     images = []
     for whole_image in whole_images:
         for scale in range(3):
             patch_size = int(64*1.2**scale)
-            patches = extract_patches_2d(whole_image, (patch_size, patch_size), max_patches=3000)
+            patches = extract_patches_2d(whole_image, (patch_size, patch_size), max_patches=1000)
             patches = [imresize(p, (64, 64)) for p in patches]
             images += patches
     labels = ["nonvehicle"] * len(images)
@@ -230,8 +235,6 @@ def enhance_positive_data(car_images):
     print("enhanced the dataset with %i positive samples" % len(labels))
     return images, labels
 
-    
-
 def fit_best_model():
     images, labels = load_data()
     train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2)
@@ -252,6 +255,10 @@ def build_model():
     images += enhanced_pos_images
     labels += enhanced_negative_labels
     labels += enhanced_pos_labels
+    
+    for image in images:
+        image = (image / 255.).astype(np.float32)
+    
     images, labels = shuffle(images, labels)
     train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.1)
     classifier = VehicleClassifier(
