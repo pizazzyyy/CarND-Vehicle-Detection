@@ -38,7 +38,7 @@ I am using skimage.feature.hog to extract hog features from the vehicle/non-vehi
 
 I started by reading in all the `vehicle` and `non-vehicle` images. Here is examples using the gray image and HOG parameters of `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
-![HOG output][https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/HOG.png]
+![HOG output](https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/HOG.png)
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 Hyperparameters, such as pixels_per_cell, cells_per_block of HOG, hist_nbins from color-histogram features, and C from SVC, are tuned by a RandomizedSearch based on cross validation (from sklearn.model_selection.RandomizedSearchCV. After the optimal values are estimated, they are fixed and used across the whole training process. This is implemented in sdcvehicle.classification.fit_best_model().
@@ -69,15 +69,15 @@ Vehicle detection in images is implemented in sdcvehicle.detection.VehicleDetect
 
 Some results are shown here. I find that change the heat map threshold from original 2.5 to 4 or even 5 will eliminate some false positive and also improve the performance:
 
-![Heatmap threshold 4][https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/output_heatmap_4.png]
-![Heatmap threshold 5][https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/output_heatmap_5.png]
+![Heatmap threshold 4](https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/output_heatmap_4.png)
+![Heatmap threshold 5](https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_images/output_heatmap_5.png)
 
 ---
 
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./out_project_video.mp4)
+Here's a [link to my video result](https://github.com/yyporsche/CarND-Vehicle-Detection/blob/master/output_project_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
