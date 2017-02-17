@@ -48,6 +48,7 @@ The classifier is implemented in sdcvehicle.classification.VehicleClassifier cla
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained a standard LinearSVC from sklearn package. There are two parts of training data: original "vehicle" vs "nonvehicle" from Udacity. To further reduce false positives, the data is augmented:
+
 1. augmented negative examples: random sampling of patches from non-vehicle areas, it is implemented in sdcvehicle.classification.enhance_negative_data(), in order to get more robustness, I added more pictures to the original work. This will prevent overfitting.
 2. augmented positive examples: random shifting, rotation, and cropping of original vehicle images
 
@@ -61,7 +62,8 @@ Sliding window + Image Pyramid as in VEhicleDetector.get_pyramid_slide_window():
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Vehicle detection in images is implemented in sdcvehicle.detection.VehicleDetector.detect_in_image() method. The main steps are,
+Vehicle detection in images is implemented in sdcvehicle.detection.VehicleDetector.detect_in_image() method. The main steps are:
+
 1. sample different patches from image by a sliding window on a pyramid of scaled images.
 2. predict vehicle/non-vehicle for each patch
 3. construct a heatmap (based on sum) of predictoin probability based on predictions on each patch
