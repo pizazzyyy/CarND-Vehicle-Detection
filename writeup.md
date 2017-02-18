@@ -122,3 +122,9 @@ def process_frame(frame):
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 The final results still have many false positives after all the tuning and efforts. I will spend more time to optimize the sliding window and also think about adding features into the model.
+
+One problem is that I only used RGB gray scale HOG features, the process accuracy will highly depends on the image quality and might only work in good daylight condition. The pipeline will likely to fail under very light or very dark conditions, or conditions that the environment is changing abruptly. 
+
+One possible solution can be adding features from other color spaces like HSV/HLS, another possible solution is to add gradient features.
+
+Another approach to make the model more robust is to improve the heat map threshold. We can integrate a heat map over several frames of video, such that areas of multiple detections get "hot", while transient false positives stay "cool". Then we can threshold the heatmap to remove false positives. Once we have a thresholded heat-map, then we can use the label() function from scipy.ndimage.measurements.
